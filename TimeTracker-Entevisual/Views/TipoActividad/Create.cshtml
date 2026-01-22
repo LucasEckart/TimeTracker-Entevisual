@@ -1,0 +1,47 @@
+﻿@model TimeTracker_Entevisual.Models.TipoActividad
+
+@{
+    ViewData["Title"] = "Crear tipo de actividad";
+}
+
+<div class="mt-4">
+    <div class="tt-card p-4 hover-lift">
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+            <div>
+                <h3 class="mb-1">Crear tipo de actividad</h3>
+                <div class="tt-text-2">Ejemplos: Cliente, Contabilidad, Producción, Reunión.</div>
+            </div>
+
+            <a class="btn btn-soft" asp-action="Index">
+                <i class="bi bi-arrow-left me-1"></i> Volver
+            </a>
+        </div>
+
+        <div class="tt-hr"></div>
+
+        <form asp-action="Create" method="post" class="row g-3">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="col-12">
+                <label asp-for="Descripcion" class="form-label mb-1 tt-text-2">Descripción</label>
+                <input asp-for="Descripcion" class="form-control" placeholder="Ej: Cliente" autofocus />
+                <span asp-validation-for="Descripcion" class="text-danger small"></span>
+            </div>
+
+            <div class="col-12 d-flex justify-content-end gap-2 mt-2">
+                <a class="btn btn-outline-light border-opacity-25" asp-action="Index">
+                    Cancelar
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check2 me-1"></i> Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

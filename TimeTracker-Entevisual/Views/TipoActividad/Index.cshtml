@@ -1,0 +1,77 @@
+﻿@model IEnumerable<TimeTracker_Entevisual.Models.TipoActividad>
+
+@{
+    ViewData["Title"] = "Tipos de actividad";
+}
+
+<div class="mt-4">
+    <div class="tt-card p-4 hover-lift">
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+            <div>
+                <h3 class="mb-1">Tipos de actividad</h3>
+                <div class="tt-text-2">Mantenedor para administrar categorías (Cliente, Contabilidad, Producción, etc.).</div>
+            </div>
+
+            <a class="btn btn-primary" asp-action="Create">
+                <i class="bi bi-plus-lg me-1"></i> Nuevo tipo
+            </a>
+        </div>
+
+        <div class="tt-hr"></div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="tt-table-wrap">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            <th class="text-end" style="width: 170px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@item.Descripcion</td>
+
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-2">
+                                        <a class="btn btn-soft tt-icon-btn"
+                                           asp-action="Edit"
+                                           asp-route-id="@item.Id"
+                                           title="Editar">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+
+                                        <a class="btn btn-outline-light border-opacity-25 tt-icon-btn"
+                                           asp-action="Delete"
+                                           asp-route-id="@item.Id"
+                                           title="Eliminar">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="tt-text-2 small">@Model.Count() tipos cargados</div>
+                <div class="tt-text-2 small">Tip: usá nombres cortos y consistentes.</div>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <div class="h5 mb-2">Todavía no hay tipos de actividad</div>
+                <div class="tt-text-2 mb-3">Creá uno para empezar (ej: Cliente, Contabilidad, Producción).</div>
+                <a class="btn btn-primary" asp-action="Create">
+                    <i class="bi bi-plus-lg me-1"></i> Crear primer tipo
+                </a>
+            </div>
+        }
+    </div>
+</div>

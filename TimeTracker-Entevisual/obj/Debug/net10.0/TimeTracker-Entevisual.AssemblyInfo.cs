@@ -11,10 +11,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.AspNetCore.Identity.UI.UIFrameworkAttribute("Bootstrap5")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("TimeTracker-Entevisual")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+32c76a494dcae9ce0f255be8033f8bd6cf3e6cc2")]
 [assembly: System.Reflection.AssemblyProductAttribute("TimeTracker-Entevisual")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TimeTracker-Entevisual")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

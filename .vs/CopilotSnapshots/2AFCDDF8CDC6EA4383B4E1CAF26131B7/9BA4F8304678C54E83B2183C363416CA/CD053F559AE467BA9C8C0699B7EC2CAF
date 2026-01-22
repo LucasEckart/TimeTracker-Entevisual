@@ -1,0 +1,640 @@
+﻿@model TimeTracker_Entevisual.Models.ViewModels.IndexVM
+@using TimeTracker_Entevisual.Models.ViewModels
+
+@{
+    ViewData["Title"] = "Actividades";
+}
+
+<div class="mt-4">
+
+    <!-- TOPBAR -->
+    <div class="tt-card p-4 hover-lift mb-3">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <h3 class="mb-1">Actividades</h3>
+                <div class="tt-text-2">Controlá tu tiempo por actividad. El mes se calcula automáticamente.</div>
+            </div>
+
+            <div class="d-flex gap-2 align-items-center">
+                <span class="tt-badge">
+                    <i class="bi bi-calendar3"></i>
+                    @Model.MesActualTexto
+                </span>
+
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaActividad">
+                    <i class="bi bi-plus-lg me-1"></i> Nueva actividad
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EN EJECUCIÓN -->
+    @if (Model.EnEjecucion != null)
+    {
+        <div class="tt-card p-4 hover-lift mb-3">
+            <div class="d-flex flex-column flex-lg-row justify-content-between gap-3">
+                <div class="flex-grow-1">
+
+                    <div class="d-flex gap-2 mb-2 flex-wrap">
+                        <span class="tt-badge tt-badge-success">
+                            <i class="bi bi-record-circle"></i> Corriendo
+                        </span>
+                        <span class="tt-badge">@Model.EnEjecucion.TipoActividad</span>
+
+                        @if (!string.IsNullOrWhiteSpace(Model.EnEjecucion.Codigo))
+                        {
+                            <span class="tt-badge">#@Model.EnEjecucion.Codigo</span>
+                        }
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-end gap-3">
+                        <div>
+                            <h4 class="mb-1">@Model.EnEjecucion.Titulo</h4>
+                            <div class="tt-text-2">@Model.EnEjecucion.Descripcion</div>
+                        </div>
+
+                        <div class="text-end">
+                            <div class="tt-text-2 small">Tiempo actual</div>
+                            <div class="h2 tt-timer"
+                                 id="tt-tiempo-actual"
+                                 data-start="@Model.EnEjecucion.TiempoActualInicio?.ToString("O")">
+                                @Model.EnEjecucion.TiempoActual
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="tt-hr"></div>
+
+                    <div class="d-flex justify-content-between flex-wrap gap-3">
+                        <div>
+                            <div class="tt-text-2 small">@Model.EnEjecucion.UltimoRegistro</div>
+                        </div>
+                        <div class="text-end">
+                            <div class="tt-text-2 small">Acumulado del mes</div>
+                            <div class="h5 tt-timer">@Model.EnEjecucion.AcumuladoMes</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-lg-column gap-2">
+                    <form asp-controller="Actividad" asp-action="Pausar" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="actividadId" value="@Model.EnEjecucion.ActividadId" />
+                        <button class="btn btn-warning">
+                            <i class="bi bi-pause-fill me-1"></i> Pausar
+                        </button>
+                    </form>
+
+                    <form asp-controller="Actividad" asp-action="Archivar" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="actividadId" value="@Model.EnEjecucion.ActividadId" />
+                        <button type="button"
+                                class="btn btn-outline-light border-opacity-25 tt-icon-btn"
+                                title="Archivar"
+                                aria-label="Archivar"
+                                data-archivar-btn="true"
+                                data-actividad-id="@Model.EnEjecucion.ActividadId"
+                                data-actividad-titulo="@Model.EnEjecucion.Titulo">
+                            <i class="bi bi-archive"></i>
+                        </button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- GRID DE ACTIVIDADES -->
+    @if (Model.Actividades.Any())
+    {
+        <div class="row g-3">
+            @foreach (var act in Model.Actividades)
+            {
+                <div class="col-12 col-lg-6">
+                    <div class="tt-card p-4 hover-lift h-100">
+
+                        <div class="d-flex justify-content-between gap-3">
+                            <div>
+                                <div class="d-flex gap-2 mb-2 flex-wrap">
+                                    <span class="tt-badge">@act.TipoActividad</span>
+
+                                    @if (!string.IsNullOrWhiteSpace(act.Codigo))
+                                    {
+                                        <span class="tt-badge">#@act.Codigo</span>
+                                    }
+
+                                    <span class="tt-badge">
+                                        @(act.Estado == EstadoActividadVM.SinIniciar ? "Sin iniciar" : "Pausada")
+                                    </span>
+                                </div>
+
+                                <h5 class="mb-1">@act.Titulo</h5>
+                                <div class="tt-text-2">@act.Descripcion</div>
+                            </div>
+
+                            <div class="text-end">
+                                <div class="tt-text-2 small">Acumulado</div>
+                                <div class="h4 tt-timer">@act.AcumuladoMes</div>
+                            </div>
+                        </div>
+
+                        <div class="tt-hr"></div>
+
+                        <div class="mb-3">
+                            <div class="tt-text-2 small">@act.UltimoRegistro</div>
+
+                            @if (!string.IsNullOrWhiteSpace(act.UltimaSesionDetalle))
+                            {
+                                <div class="tt-text-2 small">@act.UltimaSesionDetalle</div>
+                            }
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 flex-wrap align-items-center">
+
+
+                            @if (act.Estado == EstadoActividadVM.SinIniciar)
+                            {
+                                <form asp-controller="Actividad" asp-action="Iniciar" method="post" class="m-0">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="actividadId" value="@act.ActividadId" />
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="bi bi-play-fill me-1"></i> Iniciar
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-controller="Actividad" asp-action="Reanudar" method="post" class="m-0">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="actividadId" value="@act.ActividadId" />
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-play-fill me-1"></i> Reanudar
+                                    </button>
+                                </form>
+                            }
+                            <!-- Ver notas (AJAX modal) -->
+                            <button type="button"
+                                    class="btn btn-soft tt-icon-btn"
+                                    title="Ver notas"
+                                    aria-label="Ver notas"
+                                    data-notas-btn="true"
+                                    data-actividad-id="@act.ActividadId">
+                                <i class="bi bi-journal-text"></i>
+                            </button>
+
+
+                            <form asp-controller="Actividad" asp-action="Archivar" method="post" class="m-0">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="actividadId" value="@act.ActividadId" />
+                                <button type="button"
+                                        class="btn btn-outline-light border-opacity-25 tt-icon-btn"
+                                        title="Archivar"
+                                        aria-label="Archivar"
+                                        data-archivar-btn="true"
+                                        data-actividad-id="@act.ActividadId"
+                                        data-actividad-titulo="@act.Titulo">
+                                    <i class="bi bi-archive"></i>
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="tt-card p-5 text-center">
+            <h5>No hay actividades</h5>
+            <div class="tt-text-2 mb-3">Creá una para comenzar.</div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaActividad">
+                <i class="bi bi-plus-lg me-1"></i> Nueva actividad
+            </button>
+        </div>
+    }
+</div>
+
+<!-- MODAL NUEVA ACTIVIDAD -->
+<div class="modal fade" id="modalNuevaActividad" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content text-white">
+            <div class="modal-header">
+                <h5 class="modal-title">Nueva actividad</h5>
+                <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form asp-controller="Actividad" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Tipo</label>
+                            <select class="form-select" name="tipoActividadId" required>
+                                @foreach (var t in Model.TiposActividad)
+                                {
+                                    <option value="@t.Value">@t.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Código</label>
+                            <input class="form-control" name="codigo" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Fecha</label>
+                            <input class="form-control" disabled value="@DateTime.Now.ToString("dd/MM/yyyy")" />
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Título</label>
+                            <input class="form-control" name="titulo" required />
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Descripción</label>
+                            <input class="form-control" name="descripcion" />
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Notas</label>
+                            <textarea class="form-control" name="notas"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary">Crear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL PAUSA + NOTA -->
+@if (Model.PausaTiempoId != null)
+{
+    <div class="modal fade show" style="display:block; background:rgba(0,0,0,.6)">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-white">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-pause-circle me-2"></i> Pausa
+                    </h5>
+                    <a class="btn-close btn-close-white" href="@Url.Action("Index", "Home")"></a>
+                </div>
+
+                <form asp-controller="Actividad" asp-action="GuardarNotaPausa" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="tiempoId" value="@Model.PausaTiempoId" />
+                    <input type="hidden" name="actividadId" value="@Model.PausaActividadId" />
+
+                    <div class="modal-body">
+                        <div class="tt-text-2 mb-2">
+                            Período registrado:
+                            <span class="fw-semibold">
+                                @((string?)ViewBag.PausaDuracionTexto ?? "—")
+                            </span>
+                        </div>
+
+                        <label class="form-label">¿Qué hiciste durante este período? (opcional)</label>
+                        <textarea class="form-control" name="descripcion" rows="3"
+                              placeholder="Ej: conciliación, revisión de facturas, pagos a diseñadores..."></textarea>
+
+                        <div class="form-text tt-text-2">
+                            Esta nota queda asociada a este período y después la vas a poder ver en “Ver notas”.
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <a class="btn btn-outline-light" href="@Url.Action("Index", "Home")">
+                            Continuar sin nota
+                        </a>
+                        <button class="btn btn-primary" type="submit">
+                            Guardar nota
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="tt-modal-host"></div>
+
+    </div>
+}
+
+<!-- Ensure a host exists for dynamically injected modals (used by NotasModal) -->
+<div id="tt-modal-host"></div>
+
+<!--MODAL ARCHIVAR ACTRIVIDAD-->
+
+<form id="ttArchivarForm" asp-controller="Actividad" asp-action="Archivar" method="post" class="d-none">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="actividadId" id="ttArchivarActividadId" />
+</form>
+
+<div class="modal fade" id="ttConfirmArchivarModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-white">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-archive me-2"></i> Archivar actividad
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body tt-text-2">
+                ¿Querés archivar esta actividad?
+                <div class="mt-2 fw-semibold" id="ttArchivarTitulo"></div>
+                <div class="opacity-75 mt-1">Podés verla luego en “Archivadas”.</div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-light border-opacity-25" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-danger" id="ttArchivarConfirmBtn">
+                    Archivar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    (function () {
+        const el = document.getElementById("tt-tiempo-actual");
+        if (!el) return;
+
+        const startIso = el.dataset.start;
+        if (!startIso) return;
+
+        const start = new Date(startIso);
+        if (isNaN(start.getTime())) return;
+
+        function pad2(n) { return String(n).padStart(2, "0"); }
+
+        function formatHHMMSS(totalSeconds) {
+            totalSeconds = Math.max(0, Math.floor(totalSeconds));
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            return `${pad2(h)}:${pad2(m)}:${pad2(s)}`;
+        }
+
+        function tick() {
+            const now = new Date();
+            const diffSeconds = (now - start) / 1000;
+            el.textContent = formatHHMMSS(diffSeconds);
+        }
+
+        tick();
+        setInterval(tick, 1000);
+    })();
+
+        (function () {
+        const modalEl = document.getElementById("ttConfirmArchivarModal");
+        const form = document.getElementById("ttArchivarForm");
+        const inputId = document.getElementById("ttArchivarActividadId");
+        const tituloEl = document.getElementById("ttArchivarTitulo");
+        const confirmBtn = document.getElementById("ttArchivarConfirmBtn");
+
+        if (!modalEl || !form || !inputId || !confirmBtn) return;
+
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+        document.addEventListener("click", (e) => {
+            const btn = e.target.closest('[data-archivar-btn="true"]');
+            if (!btn) return;
+
+            const actividadId = btn.getAttribute("data-actividad-id");
+            const titulo = btn.getAttribute("data-actividad-titulo") || "";
+
+            inputId.value = actividadId;
+            tituloEl.textContent = titulo ? `“${titulo}”` : "";
+
+            modal.show();
+        });
+
+        confirmBtn.addEventListener("click", () => {
+            form.submit();
+        });
+    })();
+
+    (function () {
+        console.log("NotasModal JS cargado");
+
+        const host = document.getElementById("tt-modal-host");
+        if (!host) {
+            console.warn("Falta #tt-modal-host");
+            return;
+        }
+
+        const notasUrlBase = '@Url.Action("NotasModal", "Actividad")';
+        const notaUpsertUrl = '@Url.Action("NotaUpsert", "Actividad")';
+        const ocultarSesionUrl = '@Url.Action("OcultarSesionEnNotas", "Actividad")';
+
+        function getToken(modalRoot) {
+            const tokenEl = modalRoot.querySelector('input[name="__RequestVerificationToken"]');
+            return tokenEl ? tokenEl.value : "";
+        }
+
+        async function openNotasModal(actividadId) {
+            const url = `${notasUrlBase}?actividadId=${encodeURIComponent(actividadId)}`;
+            console.log("GET notas:", url);
+
+            let res;
+            try {
+                res = await fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } });
+            } catch (e) {
+                console.error("Fetch error", e);
+                alert("No se pudo conectar para cargar las notas.");
+                return;
+            }
+
+            if (!res.ok) {
+                console.error("HTTP", res.status);
+                alert(`No se pudieron cargar las notas (HTTP ${res.status}).`);
+                return;
+            }
+
+            const html = await res.text();
+            host.innerHTML = html;
+
+            const modalEl = document.getElementById("ttNotasModal");
+            if (!modalEl) {
+                console.error("No vino #ttNotasModal en el HTML");
+                alert("No se pudo abrir el modal de notas.");
+                return;
+            }
+
+            if (!window.bootstrap?.Modal) {
+                console.error("bootstrap.Modal no existe");
+                alert("Bootstrap JS no está cargado (Modal).");
+                return;
+            }
+
+            bindNotasModal(modalEl);
+
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+
+            modalEl.addEventListener("hidden.bs.modal", () => {
+                host.innerHTML = "";
+            }, { once: true });
+        }
+
+        function bindNotasModal(modalEl) {
+            const token = getToken(modalEl);
+
+            // confirm inline UI
+            const confirmWrap = modalEl.querySelector("[data-confirm-inline]");
+            const confirmOk = modalEl.querySelector("[data-confirm-ok]");
+            const confirmCancel = modalEl.querySelector("[data-confirm-cancel]");
+            const confirmText = modalEl.querySelector("[data-confirm-text]");
+
+            let pendingHideTiempoId = null;
+            let pendingHideItem = null;
+
+            function showConfirm() {
+                if (!confirmWrap) return;
+                confirmWrap.classList.remove("d-none");
+            }
+
+            function hideConfirm() {
+                if (!confirmWrap) return;
+                confirmWrap.classList.add("d-none");
+                pendingHideTiempoId = null;
+                pendingHideItem = null;
+            }
+
+            // CLICK TEXTO → EDITAR
+            modalEl.addEventListener("click", (e) => {
+                const textEl = e.target.closest("[data-nota-text]");
+                if (!textEl) return;
+
+                const item = textEl.closest("[data-nota-item]");
+                const editor = item?.querySelector("[data-nota-editor]");
+                if (!item || !editor) return;
+
+                textEl.classList.add("d-none");
+                editor.classList.remove("d-none");
+            });
+
+            // CANCELAR EDICIÓN
+            modalEl.addEventListener("click", (e) => {
+                const btn = e.target.closest("[data-nota-cancelar]");
+                if (!btn) return;
+
+                const item = btn.closest("[data-nota-item]");
+                const editor = item?.querySelector("[data-nota-editor]");
+                const textEl = item?.querySelector("[data-nota-text]");
+                if (!item || !editor || !textEl) return;
+
+                editor.classList.add("d-none");
+                textEl.classList.remove("d-none");
+            });
+
+            // GUARDAR (UPSERT)
+            modalEl.addEventListener("click", async (e) => {
+                const btn = e.target.closest("[data-nota-guardar]");
+                if (!btn) return;
+
+                const item = btn.closest("[data-nota-item]");
+                const tiempoId = item?.getAttribute("data-tiempo-id");
+                const input = item?.querySelector("[data-nota-input]");
+                if (!item || !tiempoId || !input) return;
+
+                const res = await fetch(notaUpsertUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams({
+                        "__RequestVerificationToken": token,
+                        "tiempoId": tiempoId,
+                        "descripcion": input.value
+                    })
+                });
+
+                if (!res.ok) {
+                    alert("No se pudo guardar la nota.");
+                    return;
+                }
+
+                const data = await res.json();
+                const textEl = item.querySelector("[data-nota-text]");
+                const editor = item.querySelector("[data-nota-editor]");
+
+                if (textEl) {
+                    textEl.textContent = data.texto && data.texto.trim()
+                        ? data.texto
+                        : "— (sin nota) —";
+                    textEl.classList.remove("d-none");
+                }
+                if (editor) editor.classList.add("d-none");
+            });
+
+            // CLICK OCULTAR → mostrar confirm inline (sin modal)
+            modalEl.addEventListener("click", (e) => {
+                const btn = e.target.closest("[data-nota-hide]");
+                if (!btn) return;
+
+                const item = btn.closest("[data-nota-item]");
+                const tiempoId = item?.getAttribute("data-tiempo-id");
+                if (!item || !tiempoId) return;
+
+                pendingHideTiempoId = tiempoId;
+                pendingHideItem = item;
+
+                if (confirmText) {
+                    confirmText.innerHTML = '¿Ocultar esta sesión del listado de notas?<br/><span class="opacity-75">No afecta el tiempo acumulado.</span>';
+                }
+
+                showConfirm();
+            });
+
+            // CONFIRM OK
+            confirmOk?.addEventListener("click", async () => {
+                if (!pendingHideTiempoId || !pendingHideItem) return;
+
+                const res = await fetch(ocultarSesionUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams({
+                        "__RequestVerificationToken": token,
+                        "tiempoId": pendingHideTiempoId
+                    })
+                });
+
+                if (!res.ok) {
+                    alert("No se pudo ocultar la sesión.");
+                    return;
+                }
+
+                pendingHideItem.remove();
+                hideConfirm();
+            });
+
+            // CONFIRM CANCEL
+            confirmCancel?.addEventListener("click", () => {
+                hideConfirm();
+            });
+        }
+
+        document.addEventListener("click", (e) => {
+            const btn = e.target.closest('[data-notas-btn="true"]');
+            if (!btn) return;
+
+            const actividadId = btn.getAttribute("data-actividad-id");
+            if (!actividadId) return;
+
+            openNotasModal(actividadId);
+        });
+
+        console.log("NotasModal handler OK");
+    })();
+</script>

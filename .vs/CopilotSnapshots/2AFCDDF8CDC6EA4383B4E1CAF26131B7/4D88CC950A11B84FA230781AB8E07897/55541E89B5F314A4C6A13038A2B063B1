@@ -1,0 +1,7 @@
+﻿<div class="tt-shell mt-4">
+    <div class="tt-card p-4">
+        <h3>Tipos de actividad</h3>
+        <p class="tt-text-2">Listado de tipos</p>
+        <button class="btn btn-primary">Nuevo</button>
+    </div>
+</div>

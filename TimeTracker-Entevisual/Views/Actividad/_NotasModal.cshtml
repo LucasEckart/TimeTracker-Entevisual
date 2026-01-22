@@ -1,0 +1,139 @@
+﻿@using TimeTracker_Entevisual.Models.ViewModels
+@model NotasModalVM
+
+<div class="modal fade" id="ttNotasModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content text-white">
+
+            @Html.AntiForgeryToken()
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-journal-text me-2"></i>
+                    Notas — @Model.TituloActividad
+                </h5>
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body">
+
+                @if (Model.Items == null || !Model.Items.Any())
+                {
+                    <div class="tt-text-2">
+                        Todavía no hay notas registradas.
+                    </div>
+                }
+                else
+                {
+                    <div class="list-group list-group-flush">
+
+                        @foreach (var n in Model.Items)
+                        {
+                            <div class="list-group-item bg-transparent text-white border-secondary"
+                                 data-nota-item
+                                 data-tiempo-id="@n.TiempoId">
+
+                                <!-- Header sesión -->
+                                <div class="d-flex justify-content-between align-items-start gap-3">
+                                    <div class="fw-semibold">@n.DuracionTexto</div>
+                                    <div class="tt-text-2 small">
+                                        @n.Fin.ToString("dd/MM/yyyy HH:mm")
+                                    </div>
+                                </div>
+
+                                <!-- Texto + acciones -->
+                                <div class="d-flex gap-2 align-items-start mt-2">
+                                    <!-- Texto (click para editar) -->
+                                    <div class="tt-text-2 flex-grow-1"
+                                         data-nota-text
+                                         style="cursor:pointer;">
+                                        @(!string.IsNullOrWhiteSpace(n.Texto)
+                                                                        ? n.Texto
+                                                                        : "— (sin nota) —")
+                                    </div>
+
+                                    <!-- Ocultar sesión -->
+                                    <button type="button"
+                                            class="btn btn-outline-light border-opacity-25 tt-icon-btn"
+                                            title="Ocultar sesión del listado"
+                                            aria-label="Ocultar sesión"
+                                            data-nota-hide>
+                                        <i class="bi bi-eye-slash"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Editor inline -->
+                                <div class="mt-2 d-none" data-nota-editor>
+                                    <textarea class="form-control"
+                                      rows="2"
+                                      data-nota-input>@(n.Texto ?? "")</textarea>
+
+                                    <div class="d-flex justify-content-end gap-2 mt-2">
+                                        <button type="button"
+                                                class="btn btn-outline-light border-opacity-25"
+                                                data-nota-cancelar>
+                                            Cancelar
+                                        </button>
+
+                                        <button type="button"
+                                                class="btn btn-primary"
+                                                data-nota-guardar>
+                                            Guardar
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+                }
+
+                <!-- ✅ CONFIRMACIÓN INLINE (NO MODAL) -->
+                <div class="d-none mt-3" data-confirm-inline>
+                    <div class="border border-secondary rounded-3 p-3">
+                        <div class="fw-semibold mb-1">
+                            Ocultar sesión
+                        </div>
+
+                        <div class="tt-text-2 mb-3" data-confirm-text>
+                            ¿Ocultar esta sesión del listado de notas?
+                            <br />
+                            <span class="opacity-75">
+                                No afecta el tiempo acumulado.
+                            </span>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button"
+                                    class="btn btn-outline-light border-opacity-25"
+                                    data-confirm-cancel>
+                                Cancelar
+                            </button>
+
+                            <button type="button"
+                                    class="btn btn-danger"
+                                    data-confirm-ok>
+                                Ocultar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- FIN confirm inline -->
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-outline-light border-opacity-25"
+                        data-bs-dismiss="modal">
+                    Cerrar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

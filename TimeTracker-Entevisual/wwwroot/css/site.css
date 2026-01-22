@@ -29,3 +29,458 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* ==========================================================================
+   TimeTracker - Estilo base (Opción A: Dark profesional)
+   - Paleta, tipografía, layout, cards, botones, inputs, tablas, badges, modals
+   - Pensado para Bootstrap 5 (sobrescribe con variables + clases utilitarias)
+   ========================================================================== */
+
+/* 1) Import opcional de tipografía (si no la vas a cargar en el <head>, borrá esto) */
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'); */
+
+/* 2) Variables (tema) */
+:root {
+    /* Fondo / superficies */
+    --tt-bg: #0B1220; /* fondo general */
+    --tt-surface: #0F1A2C; /* cards / paneles */
+    --tt-surface-2: #111F36; /* hover / elevación */
+    --tt-surface-3: #0C1628; /* inputs/controls */
+    --tt-border: rgba(255,255,255,.12);
+    --tt-border-2: rgba(255,255,255,.18);
+    /* Texto */
+    --tt-text: #E5E7EB; /* principal */
+    --tt-text-2: #9CA3AF; /* secundario */
+    --tt-text-3: rgba(229,231,235,.65);
+    /* Colores de acción */
+    --tt-primary: #3B82F6;
+    --tt-success: #22C55E;
+    --tt-warning: #F59E0B;
+    --tt-danger: #EF4444;
+    /* Enfoque / glow */
+    --tt-focus: rgba(59,130,246,.32);
+    --tt-shadow: 0 12px 40px rgba(0,0,0,.35);
+    /* Redondeos / spacing */
+    --tt-radius: 16px;
+    --tt-radius-sm: 12px;
+    --tt-radius-lg: 20px;
+    /* Tipografía */
+    --tt-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    /* Transiciones */
+    --tt-t: 160ms ease;
+    /* Bootstrap overrides (opcional y útil) */
+    --bs-body-bg: var(--tt-bg);
+    --bs-body-color: var(--tt-text);
+    --bs-border-color: var(--tt-border);
+    --bs-primary: var(--tt-primary);
+    --bs-success: var(--tt-success);
+    --bs-warning: var(--tt-warning);
+    --bs-danger: var(--tt-danger);
+    /* Links */
+    --bs-link-color: rgba(229,231,235,.88);
+    --bs-link-hover-color: #ffffff;
+}
+
+/* 3) Base */
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: var(--tt-font);
+    background: radial-gradient(1200px 600px at 20% -10%, rgba(59,130,246,.10), transparent 60%), radial-gradient(900px 500px at 90% 0%, rgba(34,197,94,.06), transparent 55%), var(--tt-bg);
+    color: var(--tt-text);
+}
+
+/* Selección */
+::selection {
+    background: rgba(59,130,246,.35);
+    color: #fff;
+}
+
+/* Tipografía util */
+.tt-text {
+    color: var(--tt-text) !important;
+}
+
+.tt-text-2 {
+    color: var(--tt-text-2) !important;
+}
+
+.tt-text-3 {
+    color: var(--tt-text-3) !important;
+}
+
+/* 4) Layout helpers */
+.tt-shell {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.tt-section {
+    margin-top: 1.25rem;
+}
+
+/* 5) Navbar (opcional) */
+.tt-navbar {
+    background: rgba(15,26,44,.85);
+    border-bottom: 1px solid var(--tt-border);
+    backdrop-filter: blur(10px);
+}
+
+    .tt-navbar .navbar-brand {
+        color: #fff !important;
+        letter-spacing: .2px;
+    }
+
+    .tt-navbar .nav-link {
+        color: rgba(229,231,235,.78) !important;
+    }
+
+        .tt-navbar .nav-link:hover {
+            color: #fff !important;
+        }
+
+/* 6) Cards / paneles */
+.tt-card {
+    background: rgba(15,26,44,.78);
+    border: 1px solid var(--tt-border);
+    border-radius: var(--tt-radius);
+    box-shadow: none;
+    backdrop-filter: blur(10px);
+}
+
+    .tt-card.hover-lift {
+        transition: transform var(--tt-t), border-color var(--tt-t), background var(--tt-t);
+    }
+
+        .tt-card.hover-lift:hover {
+            transform: translateY(-2px);
+            border-color: var(--tt-border-2);
+            background: rgba(17,31,54,.80);
+        }
+
+/* Separadores */
+.tt-hr {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+    margin: 1rem 0;
+}
+
+/* 7) Badges */
+.tt-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .35rem .6rem;
+    font-size: .78rem;
+    border-radius: 999px;
+    border: 1px solid var(--tt-border);
+    background: rgba(255,255,255,.08);
+    color: rgba(229,231,235,.86);
+}
+
+.tt-badge-primary {
+    border-color: rgba(59,130,246,.35);
+    background: rgba(59,130,246,.18);
+}
+
+.tt-badge-success {
+    border-color: rgba(34,197,94,.35);
+    background: rgba(34,197,94,.18);
+}
+
+.tt-badge-warning {
+    border-color: rgba(245,158,11,.35);
+    background: rgba(245,158,11,.18);
+}
+
+.tt-badge-danger {
+    border-color: rgba(239,68,68,.35);
+    background: rgba(239,68,68,.18);
+}
+
+/* 8) Botones */
+.btn {
+    border-radius: 12px;
+    transition: transform var(--tt-t), background var(--tt-t), border-color var(--tt-t), color var(--tt-t), box-shadow var(--tt-t);
+}
+
+    .btn:active {
+        transform: translateY(1px);
+    }
+
+.btn-primary {
+    background: rgba(59,130,246,.92);
+    border-color: rgba(59,130,246,.75);
+}
+
+    .btn-primary:hover {
+        background: rgba(59,130,246,1);
+        border-color: rgba(59,130,246,1);
+        box-shadow: 0 0 0 .25rem rgba(59,130,246,.20);
+    }
+
+.btn-outline-light {
+    border-color: rgba(255,255,255,.22) !important;
+    color: rgba(229,231,235,.90) !important;
+}
+
+    .btn-outline-light:hover {
+        background: rgba(255,255,255,.10) !important;
+        border-color: rgba(255,255,255,.30) !important;
+        color: #fff !important;
+    }
+
+.btn-soft {
+    background: rgba(255,255,255,.10);
+    border: 1px solid rgba(255,255,255,.16);
+    color: rgba(229,231,235,.88);
+}
+
+    .btn-soft:hover {
+        background: rgba(255,255,255,.16);
+        border-color: rgba(255,255,255,.20);
+        color: #fff;
+    }
+
+.btn-danger {
+    background: rgba(239,68,68,.92);
+    border-color: rgba(239,68,68,.75);
+}
+
+    .btn-danger:hover {
+        background: rgba(239,68,68,1);
+        border-color: rgba(239,68,68,1);
+        box-shadow: 0 0 0 .25rem rgba(239,68,68,.20);
+    }
+
+.btn-warning {
+    background: rgba(245,158,11,.95);
+    border-color: rgba(245,158,11,.75);
+    color: #111827;
+}
+
+    .btn-warning:hover {
+        background: rgba(245,158,11,1);
+        border-color: rgba(245,158,11,1);
+        box-shadow: 0 0 0 .25rem rgba(245,158,11,.20);
+        color: #0b1220;
+    }
+
+/* 9) Inputs / selects / textarea */
+.form-label {
+    color: rgba(229,231,235,.75);
+}
+
+.form-control,
+.form-select,
+.form-check-input {
+    background: rgba(12,22,40,.75);
+    border: 1px solid rgba(255,255,255,.12);
+    color: rgba(229,231,235,.90);
+    border-radius: 12px;
+}
+
+    .form-control::placeholder {
+        color: rgba(229,231,235,.45);
+    }
+
+    .form-control:focus,
+    .form-select:focus,
+    .form-check-input:focus {
+        background: rgba(12,22,40,.85);
+        color: #fff;
+        border-color: rgba(59,130,246,.45);
+        box-shadow: 0 0 0 .25rem var(--tt-focus);
+    }
+
+    .form-select option {
+        background: #0F1A2C;
+        color: #fff;
+    }
+/* algunos browsers */
+textarea.form-control {
+    resize: vertical;
+}
+
+/* input-group */
+.input-group-text {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,.10);
+    color: rgba(229,231,235,.65);
+    border-radius: 12px;
+}
+
+/* 10) Tablas (CRUD) */
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-color: rgba(229,231,235,.90);
+    --bs-table-border-color: rgba(255,255,255,.10);
+}
+
+    .table thead th {
+        color: rgba(229,231,235,.70);
+        font-weight: 600;
+        border-bottom: 1px solid rgba(255,255,255,.12) !important;
+    }
+
+    .table tbody tr {
+        transition: background var(--tt-t);
+    }
+
+        .table tbody tr:hover {
+            background: rgba(255,255,255,.06);
+        }
+
+    .table td, .table th {
+        vertical-align: middle;
+        border-color: rgba(255,255,255,.08) !important;
+    }
+
+/* Tabla dentro de card */
+.tt-table-wrap {
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: var(--tt-radius);
+    overflow: hidden;
+}
+
+/* 11) Modals */
+.modal-content {
+    background: rgba(15,26,44,.98);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: var(--tt-radius-lg);
+    box-shadow: var(--tt-shadow);
+}
+
+.modal-header, .modal-footer {
+    border-color: rgba(255,255,255,.10) !important;
+}
+
+.modal-title {
+    color: #fff;
+}
+
+.btn-close.btn-close-white {
+    filter: none;
+    opacity: .85;
+}
+
+    .btn-close.btn-close-white:hover {
+        opacity: 1;
+    }
+
+/* 12) Alerts */
+.alert {
+    border-radius: var(--tt-radius-sm);
+    border: 1px solid rgba(255,255,255,.12);
+}
+
+.alert-info {
+    background: rgba(59,130,246,.12);
+    color: rgba(229,231,235,.90);
+    border-color: rgba(59,130,246,.18);
+}
+
+/* 13) Dropdowns */
+.dropdown-menu {
+    background: rgba(15,26,44,.98);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 14px;
+    box-shadow: var(--tt-shadow);
+}
+
+.dropdown-item {
+    color: rgba(229,231,235,.85);
+}
+
+    .dropdown-item:hover {
+        background: rgba(255,255,255,.08);
+        color: #fff;
+    }
+
+/* 14) Links */
+a {
+    text-decoration: none;
+}
+
+    a:hover {
+        text-decoration: none;
+    }
+
+/* 15) Cronómetro (si lo usás) */
+.tt-timer {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: .35px;
+}
+
+/* 16) Utilidades */
+.tt-divider {
+    height: 1px;
+    background: rgba(255,255,255,.10);
+}
+
+.tt-muted {
+    color: rgba(229,231,235,.60) !important;
+}
+
+.tt-icon-btn {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+.tt-pill {
+    border-radius: 999px !important;
+}
+
+/* 17) Ajustes de Bootstrap para dark (cosas típicas) */
+.text-bg-dark {
+    background: rgba(15,26,44,.95) !important;
+    color: var(--tt-text) !important;
+}
+
+.border {
+    border-color: rgba(255,255,255,.12) !important;
+}
+
+/* Header / Navbar */
+.tt-navbar {
+    width: 100%;
+    background: rgba(15,26,44,.85);
+    border-bottom: 1px solid rgba(255,255,255,.12);
+    backdrop-filter: blur(10px);
+}
+
+    .tt-navbar .navbar-brand {
+        color: #fff !important;
+    }
+
+    .tt-navbar .nav-link {
+        color: rgba(229,231,235,.78) !important;
+        border-radius: 12px;
+        padding: .55rem .8rem;
+        transition: background 160ms ease, color 160ms ease;
+    }
+
+        .tt-navbar .nav-link:hover {
+            color: #fff !important;
+            background: rgba(255,255,255,.08);
+        }
+
+    .tt-navbar .navbar-toggler-icon {
+        filter: invert(1);
+    }
+
+.tt-navbar {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: rgba(15,26,44,.90);
+    border-bottom: 1px solid rgba(255,255,255,.12);
+    backdrop-filter: blur(10px);
+}
