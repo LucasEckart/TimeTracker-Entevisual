@@ -25,7 +25,8 @@ builder.Services.AddIdentityCore<Usuario>(options =>
 })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<TimeTrackerDbContext>()
-    .AddSignInManager();
+    .AddSignInManager()
+    .AddDefaultTokenProviders();
 
 //manejo de la cookie de autenticacion. lo ponemos en default
 builder.Services.AddAuthentication(options =>
@@ -36,10 +37,10 @@ builder.Services.AddAuthentication(options =>
 //configurar ruteo cookies
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(120);
     options.SlidingExpiration = true;
-    options.LoginPath = "/Usuario/Login";
-    options.AccessDeniedPath = "/Usuario/AccessDenied";
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
 });
 
 
@@ -63,39 +64,12 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
+await IdentitySeeder.SeedAsync(app.Services);
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
-
-
-
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<TimeTrackerDbContext>();
-
-    // Usuario interno fijo (sin login)
-    const string emailInterno = "interno@timetracker.local";
-
-    var usuarioInterno = await context.Users.FirstOrDefaultAsync(u => u.Email == emailInterno);
-
-    if (usuarioInterno == null)
-    {
-        usuarioInterno = new Usuario
-        {
-            UserName = emailInterno,
-            Email = emailInterno,
-            EmailConfirmed = true,
-            Nombre = "Usuario",
-            Apellido = "Interno"
-        };
-
-        context.Users.Add(usuarioInterno);
-        await context.SaveChangesAsync();
-    }
-}
 
 
 app.Run();

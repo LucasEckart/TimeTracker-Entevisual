@@ -14,6 +14,8 @@ namespace TimeTracker_Entevisual.Models
         public string Apellido { get; set; } = null!;
 
         [Required, MaxLength(160)]
+        public bool DebeCambiarPassword { get; set; } = true;
+
 
         public ICollection<Actividad> Actividades { get; set; } = new List<Actividad>();
     }

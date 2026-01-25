@@ -1,0 +1,59 @@
+﻿@model TimeTracker_Entevisual.Models.ViewModels.FiltrosActividadesVM
+
+<form method="get" class="tt-card p-3 p-lg-4 mb-3">
+    <div class="row g-3 align-items-end">
+
+        <!-- BUSCAR -->
+        <div class="col-12 col-lg-5">
+            <label class="form-label tt-text-2">Buscar</label>
+            <div class="input-group">
+                <span class="input-group-text bg-transparent text-white border-secondary">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input class="form-control"
+                       name="q"
+                       value="@Model.Query"
+                       placeholder="Actividad, código, nota…" />
+            </div>
+        </div>
+
+        <!-- TIPO -->
+        <div class="col-12 col-md-6 col-lg-3">
+            <label class="form-label tt-text-2">Tipo</label>
+            <select class="form-select" name="tipoId">
+                <option value="">Todos</option>
+                @foreach (var t in Model.Tipos)
+                {
+                    <option value="@t.Value" selected="@(t.Selected)">
+                        @t.Text
+                    </option>
+                }
+            </select>
+        </div>
+
+        <!-- ORDEN -->
+        <div class="col-12 col-md-6 col-lg-2">
+            <label class="form-label tt-text-2">Orden</label>
+            <select class="form-select" name="orden">
+                <option value="recientes" selected="@(Model.Orden == "recientes")">Más recientes</option>
+                <option value="az" selected="@(Model.Orden == "az")">A–Z</option>
+            </select>
+        </div>
+
+        <!-- ACCIONES -->
+        <div class="col-12 col-lg-2">
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary flex-fill">
+                    Aplicar
+                </button>
+
+                <a class="btn btn-outline-light border-opacity-25 flex-fill"
+                   asp-controller="@ViewContext.RouteData.Values["controller"]"
+                   asp-action="@ViewContext.RouteData.Values["action"]">
+                     Limpiar
+                </a>
+            </div>
+        </div>
+
+    </div>
+</form>

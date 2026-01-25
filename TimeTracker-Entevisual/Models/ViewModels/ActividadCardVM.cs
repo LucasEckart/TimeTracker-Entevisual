@@ -28,5 +28,7 @@
 
         // Útil para Sin iniciar
         public string? FechaCreacionTexto { get; set; }
+        public string? UsuarioNombre { get; set; }  // "Sol Pérez"
+
     }
 }

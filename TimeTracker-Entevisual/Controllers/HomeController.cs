@@ -1,20 +1,21 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using TimeTracker_Entevisual.Data;
+using TimeTracker_Entevisual.Helpers;
 using TimeTracker_Entevisual.Models;
 using TimeTracker_Entevisual.Models.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TimeTracker_Entevisual.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
-        private const string EmailInterno = "interno@timetracker.local";
-
         private readonly TimeTrackerDbContext _context;
-        private readonly UserManager<Usuario> _userManager; // por ahora no se usa (modo interno)
+        private readonly UserManager<Usuario> _userManager;
 
         public HomeController(TimeTrackerDbContext context, UserManager<Usuario> userManager)
         {
@@ -23,19 +24,38 @@ namespace TimeTracker_Entevisual.Controllers
         }
 
 
-        public async Task<IActionResult> Index(int? pausaTiempoId = null, int? pausaActividadId = null)
+        public async Task<IActionResult> Index(
+            int? pausaTiempoId = null,
+            int? pausaActividadId = null,
+            string? q = null,
+            int? tipoId = null,
+            string? orden = "recientes"
+        )
         {
-            var usuarioId = await GetUsuarioInternoId();
+            var user = await _userManager.GetUserAsync(User);
+            if (user?.DebeCambiarPassword == true)
+                return RedirectToAction("ChangePasswordObligatorio", "Account");
+
+            // ? Usuario logueado
+            var usuarioId = _userManager.GetUserId(User);
+            if (string.IsNullOrWhiteSpace(usuarioId))
+                return RedirectToAction("Login", "Account");
+
+            var esAdmin = User.IsInRole("Admin");
 
             var now = DateTime.Now;
             var inicioMes = new DateTime(now.Year, now.Month, 1);
             var finMes = inicioMes.AddMonths(1);
 
-            var actividades = await _context.Actividades
+            // ---- Dropdown tipos (modal + filtros) ----
+            var tipos = await _context.TiposActividad
                 .AsNoTracking()
-                .Where(a => a.UsuarioId == usuarioId && !a.Archivado)
-                .Include(a => a.TipoActividad)
-                .Include(a => a.Tiempos).ThenInclude(t => t.MarcasTiempo)
+                .OrderBy(t => t.Descripcion)
+                .Select(t => new SelectListItem
+                {
+                    Value = t.Id.ToString(),
+                    Text = t.Descripcion
+                })
                 .ToListAsync();
 
             var vm = new IndexVM
@@ -43,18 +63,22 @@ namespace TimeTracker_Entevisual.Controllers
                 MesActualTexto = now.ToString("MMMM yyyy"),
                 PausaTiempoId = pausaTiempoId,
                 PausaActividadId = pausaActividadId,
-                TiposActividad = await _context.TiposActividad
-                    .AsNoTracking()
-                    .OrderBy(t => t.Descripcion)
-                    .Select(t => new SelectListItem
-                    {
-                        Value = t.Id.ToString(),
-                        Text = t.Descripcion
-                    })
-                    .ToListAsync()
+                TiposActividad = tipos
             };
 
-            // Para mostrar "Período registrado: 2h 00m" en el modal
+            // ---- Filtros UI ----
+            vm.Filtros.Query = q;
+            vm.Filtros.TipoActividadId = tipoId;
+            vm.Filtros.Orden = string.IsNullOrWhiteSpace(orden) ? "recientes" : orden;
+
+            vm.Filtros.Tipos = tipos.Select(x => new SelectListItem
+            {
+                Value = x.Value,
+                Text = x.Text,
+                Selected = (tipoId.HasValue && x.Value == tipoId.Value.ToString())
+            }).ToList();
+
+            // ---- Para mostrar "Período registrado" en modal pausa ----
             if (pausaTiempoId.HasValue)
             {
                 var t = await _context.Tiempos
@@ -72,25 +96,73 @@ namespace TimeTracker_Entevisual.Controllers
                 }
             }
 
-            foreach (var a in actividades)
-            {
-                var card = BuildCardVM(a, now, inicioMes, finMes);
+            // ---- Query base ----
+            var query = _context.Actividades
+                .AsNoTracking()
+                .Where(a => !a.Archivado && !a.Eliminado)
+                .Include(a => a.TipoActividad)
+                .Include(a => a.Usuario)
+                .Include(a => a.Tiempos)
+                    .ThenInclude(t => t.MarcasTiempo)
+                .AsQueryable();
 
-                if (card.Estado == EstadoActividadVM.Corriendo)
-                    vm.EnEjecucion = card;
-                else
-                    vm.Actividades.Add(card);
+            // ? Si NO es admin, solo ve las propias
+            if (!esAdmin)
+                query = query.Where(a => a.UsuarioId == usuarioId);
+
+            // ---- Filtro por tipo ----
+            if (tipoId.HasValue)
+                query = query.Where(a => a.TipoActividadId == tipoId.Value);
+
+            // ---- Búsqueda ----
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                var term = q.Trim().ToLower();
+
+                query = query.Where(a =>
+                    (a.Titulo != null && a.Titulo.ToLower().Contains(term)) ||
+                    (a.Descripcion != null && a.Descripcion.ToLower().Contains(term)) ||
+                    (a.Codigo != null && a.Codigo.ToLower().Contains(term)) ||
+                    (a.TipoActividad != null && a.TipoActividad.Descripcion.ToLower().Contains(term)) ||
+                    a.Tiempos.Any(t => t.MarcasTiempo.Any(m => m.Descripcion != null && m.Descripcion.ToLower().Contains(term))) ||
+
+                    // ? NUEVO: buscar por usuario (admin)
+                    (a.Usuario != null &&
+                        (
+                            (a.Usuario.Nombre != null && a.Usuario.Nombre.ToLower().Contains(term)) ||
+                            (a.Usuario.Apellido != null && a.Usuario.Apellido.ToLower().Contains(term)) ||
+                            ((a.Usuario.Nombre + " " + a.Usuario.Apellido).ToLower().Contains(term))
+                        )
+                    )
+                );
+
             }
 
-            return View(vm);
-        }
+            // ---- Orden ----
+            orden = string.IsNullOrWhiteSpace(orden) ? "recientes" : orden;
 
-        private async Task<string> GetUsuarioInternoId()
-        {
-            return await _context.Users
-                .Where(u => u.Email == EmailInterno)
-                .Select(u => u.Id)
-                .FirstAsync();
+            query = orden == "az"
+                ? query.OrderBy(a => a.Titulo)
+                : query.OrderByDescending(a => a.FechaCreacion);
+
+            var actividades = await query.ToListAsync();
+
+            // ---- Cards ----
+            foreach (var a in actividades)
+            {
+
+                var card = BuildCardVM(a, now, inicioMes, finMes);
+                if (card.Estado == EstadoActividadVM.Corriendo)
+                    vm.EnEjecucion.Add(card);
+                else
+                    vm.Actividades.Add(card);
+
+            }
+
+            if (orden == "az")
+                vm.Actividades = vm.Actividades.OrderBy(x => x.Titulo).ToList();
+
+            return View(vm);
         }
 
         private static ActividadCardVM BuildCardVM(Actividad a, DateTime now, DateTime inicioMes, DateTime finMes)
@@ -107,6 +179,7 @@ namespace TimeTracker_Entevisual.Controllers
                 .OrderByDescending(t => t.Fin)
                 .FirstOrDefault();
 
+
             var ultimaSesionDetalle = BuildUltimaSesionDetalle(ultimaSesionCerrada, now, out var ultimaSesionDurSeg);
 
             var ultimoRegistro = BuildUltimoRegistro(a, tieneSesiones, ultimaSesionCerrada, ultimaSesionDurSeg, now);
@@ -119,11 +192,18 @@ namespace TimeTracker_Entevisual.Controllers
                 Titulo = a.Titulo,
                 Descripcion = a.Descripcion,
                 Estado = estado,
-                AcumuladoMes = FormatoHHMMSS(acumSeg),
+                UsuarioNombre = a.Usuario != null
+                    ? $"{a.Usuario.Nombre} {a.Usuario.Apellido}"
+                    : null,
+
+                // helpers
+                AcumuladoMes = TimeFormatHelper.FormatoHHMMSS(acumSeg),
+
                 TiempoActualInicio = (abierto != null) ? abierto.Inicio : null,
                 UltimoRegistro = ultimoRegistro,
                 UltimaSesionDetalle = (estado == EstadoActividadVM.Pausada) ? ultimaSesionDetalle : null
             };
+
         }
 
         private static EstadoActividadVM GetEstado(Tiempo? abierto, bool tieneSesiones)
@@ -184,14 +264,6 @@ namespace TimeTracker_Entevisual.Controllers
                 return $"Último registro: Sesión — {FormatoDuracionCorta(ultimaSesionDurSeg.Value)} • {HaceCuanto(ultimaSesionCerrada.Fin.Value, now)}";
 
             return "Último registro: Sesión — —";
-        }
-
-        private static string FormatoHHMMSS(long segundos)
-        {
-            if (segundos < 0) segundos = 0;
-            var ts = TimeSpan.FromSeconds(segundos);
-            var totalHoras = (int)ts.TotalHours;
-            return $"{totalHoras:00}:{ts.Minutes:00}:{ts.Seconds:00}";
         }
 
         private static string FormatoDuracionCorta(long segundos)

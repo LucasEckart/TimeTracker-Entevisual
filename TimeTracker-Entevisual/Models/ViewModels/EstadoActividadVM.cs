@@ -4,6 +4,8 @@
     {
         SinIniciar = 0,
         Pausada = 1,
-        Corriendo = 2
+        Corriendo = 2,
+        Archivada = 3
     }
+
 }

@@ -34,5 +34,9 @@ namespace TimeTracker_Entevisual.Models
 
         // Sesiones de tiempo (cada iniciar/reanudar crea una nueva)
         public ICollection<Tiempo> Tiempos { get; set; } = new List<Tiempo>();
+
+        public bool Eliminado { get; set; } = false;
+        public DateTime? FechaEliminado { get; set; }
+
     }
 }

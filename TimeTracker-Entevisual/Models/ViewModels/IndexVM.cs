@@ -8,7 +8,7 @@ namespace TimeTracker_Entevisual.Models.ViewModels
     public class IndexVM
     {
         public string MesActualTexto { get; set; } = "";
-        public ActividadCardVM? EnEjecucion { get; set; }
+        public List<ActividadCardVM> EnEjecucion { get; set; } = new();
         public List<ActividadCardVM> Actividades { get; set; } = new();
 
         // Para el modal "Nueva actividad"
@@ -19,5 +19,9 @@ namespace TimeTracker_Entevisual.Models.ViewModels
         public int? PausaActividadId { get; set; }
 
         public int TotalActividades => Actividades.Count + (EnEjecucion is null ? 0 : 1);
+
+        public FiltrosActividadesVM Filtros { get; set; } = new();
+
+
     }
 }

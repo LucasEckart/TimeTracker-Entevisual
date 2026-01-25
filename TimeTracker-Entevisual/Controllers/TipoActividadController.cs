@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TimeTracker_Entevisual.Data;
 using TimeTracker_Entevisual.Models;
 
 namespace TimeTracker_Entevisual.Controllers
 {
+    [Authorize(Roles = "Admin,Moderador")]
+
+
     public class TipoActividadController : Controller
     {
         private readonly TimeTrackerDbContext _context;

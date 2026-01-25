@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TimeTracker-Entevisual")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+32c76a494dcae9ce0f255be8033f8bd6cf3e6cc2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6972d58225972da9b2907a975e10df12f06f5955")]
 [assembly: System.Reflection.AssemblyProductAttribute("TimeTracker-Entevisual")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TimeTracker-Entevisual")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

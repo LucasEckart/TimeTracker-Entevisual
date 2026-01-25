@@ -1,0 +1,202 @@
+﻿@model List<TimeTracker_Entevisual.Models.ViewModels.UsuarioListItemVM>
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+<div class="tt-shell mt-4">
+    <div class="tt-card p-4 p-lg-5">
+        <div class="d-flex justify-content-between align-items-start gap-3">
+            <div>
+                <h3 class="mb-1">Usuarios</h3>
+                <div class="tt-text-2">Mantenedor (solo Admin).</div>
+            </div>
+            <a class="btn btn-primary" asp-action="Create">
+                <i class="bi bi-person-plus me-1"></i> Nuevo usuario
+            </a>
+        </div>
+
+        @if (TempData["Credenciales"] != null)
+        {
+            <div class="alert alert-warning mt-3">
+                <strong>Credenciales (temporal para testing):</strong><br />
+                @TempData["Credenciales"]
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger mt-3">@TempData["Error"]</div>
+        }
+
+        <div class="tt-hr my-4"></div>
+
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr class="text-muted">
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var u in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@u.Apellido, @u.Nombre</td>
+                        <td>@u.Email</td>
+                            <td>
+                                @if (u.EsAdmin)
+                                {
+                                    <span class="badge bg-danger">Admin</span>
+                                }
+                                else if (u.EsModerador)
+                                {
+                                    <span class="badge bg-warning text-dark">Moderador</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Usuario</span>
+                                }
+                            </td>
+
+                        <td>
+                            @if (u.Activo)
+                            {
+                                <span class="badge bg-success">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-dark">Inactivo</span>
+                            }
+                            @if (u.DebeCambiarPassword)
+                            {
+                                <span class="badge bg-warning text-dark ms-1">Debe cambiar password</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-light border-opacity-25"
+                               asp-action="Edit" asp-route-id="@u.Id">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+
+                                <form asp-controller="Usuarios"
+                                      asp-action="ResetPassword"
+                                      method="post"
+                                      class="d-inline"
+                                      data-reset-form
+                                      data-user-name="@u.Nombre @u.Apellido"
+                                      data-user-email="@u.Email">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="userId" value="@u.Id" />
+
+                                    <button type="submit" class="btn btn-outline-warning btn-sm">
+                                        <i class="bi bi-key me-1"></i> 
+                                    </button>
+                                </form>
+
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ttConfirmResetPassModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-white">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-shield-lock me-2"></i> Confirmar cambio de contraseña
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="tt-text-2 mb-2">
+                        Vas a generar una contraseña temporal nueva y el usuario deberá cambiarla al iniciar sesión.
+                    </div>
+
+                    <div class="small">
+                        <div><span class="opacity-75">Usuario:</span> <strong id="ttResetUserName">—</strong></div>
+                        <div><span class="opacity-75">Email:</span> <strong id="ttResetUserEmail">—</strong></div>
+                    </div>
+
+                    <div class="alert alert-warning mt-3 mb-0">
+                        <div class="fw-semibold">Ojo:</div>
+                        <div class="small">Esto invalida la contraseña anterior. Usalo solo si es necesario.</div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-light border-opacity-25" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <button type="button" class="btn btn-warning" id="ttConfirmResetPassBtn">
+                        <i class="bi bi-key me-1"></i> Confirmar
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            const modalEl = document.getElementById("ttConfirmResetPassModal");
+            if (!modalEl) return;
+
+            const nameEl = document.getElementById("ttResetUserName");
+            const emailEl = document.getElementById("ttResetUserEmail");
+            const confirmBtn = document.getElementById("ttConfirmResetPassBtn");
+
+            let pendingForm = null;
+            let modal = null;
+
+            document.addEventListener("submit", (e) => {
+                const form = e.target.closest("[data-reset-form]");
+                if (!form) return;
+
+                // frenar submit inmediato
+                e.preventDefault();
+
+                pendingForm = form;
+
+                // llenar datos en modal
+                const uname = form.getAttribute("data-user-name") || "—";
+                const uemail = form.getAttribute("data-user-email") || "—";
+                if (nameEl) nameEl.textContent = uname;
+                if (emailEl) emailEl.textContent = uemail;
+
+                // abrir modal
+                modal = modal || new bootstrap.Modal(modalEl);
+                modal.show();
+            });
+
+            confirmBtn?.addEventListener("click", () => {
+                if (!pendingForm) return;
+
+                // cerrar modal
+                bootstrap.Modal.getInstance(modalEl)?.hide();
+
+                // enviar form
+                pendingForm.submit();
+
+                pendingForm = null;
+            });
+
+            // si cancela/cierra, limpiamos
+            modalEl.addEventListener("hidden.bs.modal", () => {
+                pendingForm = null;
+            });
+        })();
+    </script>
+}
+

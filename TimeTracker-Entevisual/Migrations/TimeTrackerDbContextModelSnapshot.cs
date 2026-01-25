@@ -174,7 +174,13 @@ namespace TimeTracker_Entevisual.Migrations
                         .HasMaxLength(400)
                         .HasColumnType("nvarchar(400)");
 
+                    b.Property<bool>("Eliminado")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FechaEliminado")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Notas")
@@ -294,6 +300,10 @@ namespace TimeTracker_Entevisual.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("DebeCambiarPassword")
+                        .HasMaxLength(160)
+                        .HasColumnType("bit");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
