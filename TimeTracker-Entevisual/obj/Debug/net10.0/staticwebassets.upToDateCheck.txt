@@ -1,5 +1,6 @@
 wwwroot\css\site.css
 wwwroot\favicon.ico
+wwwroot\img\logo1.png
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
@@ -61,7 +62,6 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\img\logo1.png
 C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entevisual\wwwroot\css\site.css
 C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entevisual\wwwroot\favicon.ico
 C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entevisual\wwwroot\js\site.js

@@ -30,6 +30,10 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @{
+                            var tiposEnUso = ViewBag.TiposEnUso as HashSet<int> ?? new HashSet<int>();
+                        }
+
                         @foreach (var item in Model)
                         {
                             <tr>
@@ -43,13 +47,24 @@
                                            title="Editar">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
+                                        @if (tiposEnUso.Contains(item.Id))
+                                        {
+                                            <button class="btn btn-outline-light border-opacity-25 tt-icon-btn"
+                                                    title="No se puede eliminar (en uso)"
+                                                    disabled>
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-outline-light border-opacity-25 tt-icon-btn"
+                                               asp-action="Delete"
+                                               asp-route-id="@item.Id"
+                                               title="Eliminar">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        }
 
-                                        <a class="btn btn-outline-light border-opacity-25 tt-icon-btn"
-                                           asp-action="Delete"
-                                           asp-route-id="@item.Id"
-                                           title="Eliminar">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
                                     </div>
                                 </td>
                             </tr>

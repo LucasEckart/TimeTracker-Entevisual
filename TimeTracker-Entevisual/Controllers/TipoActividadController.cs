@@ -26,7 +26,22 @@ namespace TimeTracker_Entevisual.Controllers
         // GET: TipoActividad
         public async Task<IActionResult> Index()
         {
-            return View(await _context.TiposActividad.ToListAsync());
+            var tipos = await _context.TiposActividad
+                .AsNoTracking()
+                .OrderBy(t => t.Descripcion)
+                .ToListAsync();
+
+            // tipos que están en uso por alguna actividad (no eliminada)
+            var tiposEnUso = await _context.Actividades
+                .AsNoTracking()
+                .Where(a => !a.Eliminado) // si no tenés Eliminado, sacalo
+                .Select(a => a.TipoActividadId)
+                .Distinct()
+                .ToListAsync();
+
+            ViewBag.TiposEnUso = tiposEnUso.ToHashSet();
+
+            return View(tipos);
         }
 
         // GET: TipoActividad/Details/5
@@ -123,35 +138,48 @@ namespace TimeTracker_Entevisual.Controllers
         // GET: TipoActividad/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var tipoActividad = await _context.TiposActividad
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (tipoActividad == null)
-            {
-                return NotFound();
-            }
+
+            if (tipoActividad == null) return NotFound();
+
+            var cantidad = await _context.Actividades
+                .AsNoTracking()
+                .CountAsync(a => a.TipoActividadId == id && !a.Eliminado); // si no tenés Eliminado, sacalo
+
+            ViewBag.EnUso = cantidad > 0;
+            ViewBag.CantidadActividades = cantidad;
 
             return View(tipoActividad);
         }
 
-        // POST: TipoActividad/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var tipoActividad = await _context.TiposActividad.FindAsync(id);
-            if (tipoActividad != null)
+            var tipo = await _context.TiposActividad.FirstOrDefaultAsync(t => t.Id == id);
+            if (tipo == null) return NotFound();
+
+            var enUso = await _context.Actividades
+                .AsNoTracking()
+                .AnyAsync(a => a.TipoActividadId == id && !a.Eliminado); // si no tenés Eliminado, sacalo
+
+            if (enUso)
             {
-                _context.TiposActividad.Remove(tipoActividad);
+                TempData["Error"] = "No se puede eliminar este tipo porque está asociado a una o más actividades.";
+                return RedirectToAction(nameof(Index));
             }
 
+            _context.TiposActividad.Remove(tipo);
             await _context.SaveChangesAsync();
+
+            TempData["Ok"] = "Tipo eliminado.";
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool TipoActividadExists(int id)
         {
