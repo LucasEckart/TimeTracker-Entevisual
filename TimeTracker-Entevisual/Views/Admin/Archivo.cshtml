@@ -1,0 +1,329 @@
+﻿@using TimeTracker_Entevisual.Models.ViewModels
+@model ArchivoIndexVM
+
+@{
+    ViewData["Title"] = "Archivadas";
+}
+
+<div class="tt-shell mt-4">
+
+    <div class="tt-card p-4 p-lg-5">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start gap-3">
+            <div>
+                <h3 class="mb-1">Actividades archivadas</h3>
+                <div class="tt-text-2">
+                    Historial de actividades finalizadas. Podés revisar notas y tiempos acumulados.
+                </div>
+
+                @if (Model.EsGlobal)
+                {
+                    <div class="tt-text-2 small opacity-75 mt-2">
+                        <i class="bi bi-eye me-1"></i> Vista global (solo auditoría). No se puede desarchivar ni eliminar desde acá.
+                    </div>
+                }
+            </div>
+
+            <div class="d-flex gap-2">
+                @* ✅ En global conviene volver al dashboard global; si querés lo ajustás *@
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-light border-opacity-25">
+                    <i class="bi bi-arrow-left me-1"></i> Volver
+                </a>
+            </div>
+        </div>
+
+        <div class="tt-hr my-4"></div>
+
+        @await Html.PartialAsync("_FiltrosActividades", Model.Filtros)
+
+        @if (Model.Actividades == null || !Model.Actividades.Any())
+        {
+            <div class="text-center py-5">
+                <div class="display-6 mb-2">📦</div>
+                <h5 class="mb-1">No hay actividades archivadas</h5>
+                <div class="tt-text-2 mb-3">
+                    Cuando archives una actividad desde el dashboard, va a aparecer acá.
+                </div>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                    Ir al dashboard
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="row g-3">
+                @foreach (var act in Model.Actividades)
+                {
+                    <div class="col-12 col-lg-6">
+                        <div class="tt-card p-4 hover-lift h-100">
+
+                            <div class="d-flex justify-content-between gap-3">
+                                <div>
+                                    <div class="d-flex gap-2 mb-2 flex-wrap">
+                                        <span class="tt-badge">@act.TipoActividad</span>
+
+                                        @if (!string.IsNullOrWhiteSpace(act.Codigo))
+                                        {
+                                            <span class="tt-badge">#@act.Codigo</span>
+                                        }
+
+                                        <span class="tt-badge">Archivada</span>
+
+                                        @* ✅ Mostrar usuario si viene en el VM (admin global lo necesita) *@
+                                        @if (!string.IsNullOrWhiteSpace(act.UsuarioNombre))
+                                        {
+                                            <span class="tt-badge">
+                                                <i class="bi bi-person me-1"></i>@act.UsuarioNombre
+                                            </span>
+                                        }
+                                    </div>
+
+                                    <h5 class="mb-1">@act.Titulo</h5>
+                                    <div class="tt-text-2">@act.Descripcion</div>
+                                </div>
+
+                                <div class="text-end">
+                                    <div class="tt-text-2 small">Total</div>
+                                    <div class="h4 tt-timer">@act.AcumuladoMes</div>
+                                </div>
+                            </div>
+
+                            <div class="tt-hr"></div>
+
+                            <div class="mb-3">
+                                <div class="tt-text-2 small">@act.UltimoRegistro</div>
+
+                                @if (!string.IsNullOrWhiteSpace(act.UltimaSesionDetalle))
+                                {
+                                    <div class="tt-text-2 small">@act.UltimaSesionDetalle</div>
+                                }
+                            </div>
+
+                            <div class="d-flex justify-content-end gap-2">
+
+                                <!-- Ver notas (SIEMPRE, auditoría) -->
+                                <button type="button"
+                                        class="btn btn-soft tt-icon-btn"
+                                        title="Ver notas"
+                                        data-notas-btn="true"
+                                        data-actividad-id="@act.ActividadId">
+                                    <i class="bi bi-journal-text"></i>
+                                </button>
+
+                                @* ✅ SOLO EN PERSONAL *@
+                                @if (!Model.EsGlobal)
+                                {
+                                    <!-- Desarchivar (abre modal) -->
+                                    <button type="button"
+                                            class="btn btn-outline-light border-opacity-25 tt-icon-btn"
+                                            title="Desarchivar"
+                                            aria-label="Desarchivar"
+                                            data-desarchivar-btn="true"
+                                            data-actividad-id="@act.ActividadId"
+                                            data-actividad-titulo="@act.Titulo">
+                                        <i class="bi bi-arrow-counterclockwise"></i>
+                                    </button>
+
+                                    <!-- Eliminar definitivo -->
+                                    <button type="button"
+                                            class="btn btn-outline-danger tt-icon-btn"
+                                            title="Eliminar definitivamente"
+                                            aria-label="Eliminar definitivamente"
+                                            data-eliminar-btn="true"
+                                            data-actividad-id="@act.ActividadId"
+                                            data-actividad-titulo="@act.Titulo">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="tt-text-2 small mt-3 d-flex justify-content-between">
+                <span>@Model.Actividades.Count actividad(es) archivada(s)</span>
+                <span class="opacity-75">Tip: podés ver notas desde el ícono de cuaderno.</span>
+            </div>
+        }
+    </div>
+
+    <!-- Host para inyectar el modal de notas -->
+    <div id="tt-modal-host"></div>
+
+    @* ✅ SOLO EN PERSONAL: forms + modales de confirm *@
+    @if (!Model.EsGlobal)
+    {
+        <!-- Form oculto para POST desarchivar -->
+        <form id="ttDesarchivarForm" asp-controller="Archivo" asp-action="Desarchivar" method="post" class="d-none">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="actividadId" id="ttDesarchivarActividadId" />
+        </form>
+
+        <!-- Modal confirm desarchivar -->
+        <div class="modal fade" id="ttConfirmDesarchivarModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content text-white">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-arrow-counterclockwise me-2"></i> Desarchivar actividad
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+
+                    <div class="modal-body tt-text-2">
+                        ¿Querés desarchivar esta actividad y volver a dejarla activa?
+                        <div class="mt-2 fw-semibold" id="ttDesarchivarTitulo"></div>
+                        <div class="opacity-75 mt-1">Va a volver a aparecer en el dashboard.</div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-light border-opacity-25" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="button" class="btn btn-primary" id="ttDesarchivarConfirmBtn">
+                            Desarchivar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form id="ttEliminarForm" asp-controller="Archivo" asp-action="EliminarDefinitivo" method="post" class="d-none">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="actividadId" id="ttEliminarActividadId" />
+        </form>
+
+        <div class="modal fade" id="ttConfirmEliminarModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content text-white">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-trash3 me-2"></i> Eliminar definitivamente
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+
+                    <div class="modal-body tt-text-2">
+                        Vas a ocultar esta actividad para siempre (no aparecerá en el dashboard ni en archivo).
+                        <div class="mt-2 fw-semibold" id="ttEliminarTitulo"></div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-light border-opacity-25" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="button" class="btn btn-danger" id="ttEliminarConfirmBtn">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+
+    <!-- Abrir modal de notas (reutiliza Actividad/NotasModal) -->
+    <script>
+        (function () {
+            const host = document.getElementById("tt-modal-host");
+            if (!host) return;
+
+            const notasUrlBase = '@Url.Action("NotasModal", "Actividad")';
+
+            async function openNotasModal(actividadId) {
+                const url = `${notasUrlBase}?actividadId=${encodeURIComponent(actividadId)}`;
+
+                const res = await fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } });
+
+                if (!res.ok) {
+                    alert("No se pudieron cargar las notas.");
+                    return;
+                }
+
+                host.innerHTML = await res.text();
+
+                const modalEl = document.getElementById("ttNotasModal");
+                if (!modalEl) {
+                    alert("No se pudo abrir el modal de notas.");
+                    return;
+                }
+
+                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                modal.show();
+
+                modalEl.addEventListener("hidden.bs.modal", () => {
+                    host.innerHTML = "";
+                }, { once: true });
+            }
+
+            document.addEventListener("click", (e) => {
+                const btn = e.target.closest('[data-notas-btn="true"]');
+                if (!btn) return;
+
+                const actividadId = btn.getAttribute("data-actividad-id");
+                if (!actividadId) return;
+
+                openNotasModal(actividadId);
+            });
+        })();
+    </script>
+
+    @* ✅ SOLO EN PERSONAL: JS de modales confirm *@
+    @if (!Model.EsGlobal)
+    {
+        <script>
+            (function () {
+                const modalEl = document.getElementById("ttConfirmDesarchivarModal");
+                const form = document.getElementById("ttDesarchivarForm");
+                const inputId = document.getElementById("ttDesarchivarActividadId");
+                const tituloEl = document.getElementById("ttDesarchivarTitulo");
+                const confirmBtn = document.getElementById("ttDesarchivarConfirmBtn");
+
+                if (!modalEl || !form || !inputId || !confirmBtn) return;
+
+                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+                document.addEventListener("click", (e) => {
+                    const btn = e.target.closest('[data-desarchivar-btn="true"]');
+                    if (!btn) return;
+
+                    inputId.value = btn.getAttribute("data-actividad-id") || "";
+                    const titulo = btn.getAttribute("data-actividad-titulo") || "";
+                    tituloEl.textContent = titulo ? `“${titulo}”` : "";
+
+                    modal.show();
+                });
+
+                confirmBtn.addEventListener("click", () => form.submit());
+            })();
+
+            (function () {
+                const modalEl = document.getElementById("ttConfirmEliminarModal");
+                const form = document.getElementById("ttEliminarForm");
+                const inputId = document.getElementById("ttEliminarActividadId");
+                const tituloEl = document.getElementById("ttEliminarTitulo");
+                const confirmBtn = document.getElementById("ttEliminarConfirmBtn");
+
+                if (!modalEl || !form || !inputId || !confirmBtn) return;
+
+                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+                document.addEventListener("click", (e) => {
+                    const btn = e.target.closest('[data-eliminar-btn="true"]');
+                    if (!btn) return;
+
+                    inputId.value = btn.getAttribute("data-actividad-id") || "";
+                    const titulo = btn.getAttribute("data-actividad-titulo") || "";
+                    tituloEl.textContent = titulo ? `“${titulo}”` : "";
+
+                    modal.show();
+                });
+
+                confirmBtn.addEventListener("click", () => form.submit());
+            })();
+        </script>
+    }
+}

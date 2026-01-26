@@ -212,6 +212,13 @@ namespace TimeTracker_Entevisual.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        // ---------------------------------------------------------------
+        // ---------------------------------------------------------------
+        // FUNCIONES AUXILIARES
+        // ---------------------------------------------------------------
+        // ---------------------------------------------------------------
+
         private static string GenerarPasswordTemporal()
         {
             // cumple: mayúscula + minúscula + número + símbolo + largo

@@ -21,11 +21,24 @@
                     @Model.MesActualTexto
                 </span>
 
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaActividad">
-                    <i class="bi bi-plus-lg me-1"></i> Nueva actividad
-                </button>
+                @* ✅ SOLO EN PERSONAL *@
+                @if (!Model.EsGlobal)
+                {
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaActividad">
+                        <i class="bi bi-plus-lg me-1"></i> Nueva actividad
+                    </button>
+                }
             </div>
         </div>
+
+        @* ✅ Opcional: avisito en global *@
+        @if (Model.EsGlobal)
+        {
+            <div class="tt-hr my-3"></div>
+            <div class="tt-text-2 small opacity-75">
+                <i class="bi bi-eye me-1"></i> Vista global (solo auditoría). No se pueden iniciar/pausar/modificar actividades desde acá.
+            </div>
+        }
     </div>
 
     @await Html.PartialAsync("_FiltrosActividades", Model.Filtros)
@@ -51,7 +64,7 @@
                                 <span class="tt-badge">#@act.Codigo</span>
                             }
 
-                            @* Badge de usuario (clave para Admin) *@
+                            @* Badge de usuario *@
                             @if (!string.IsNullOrWhiteSpace(act.UsuarioNombre))
                             {
                                 <span class="tt-badge">
@@ -89,30 +102,33 @@
                         </div>
                     </div>
 
-                    <div class="d-flex flex-lg-column gap-2">
-                        <form asp-controller="Actividad" asp-action="Pausar" method="post">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="actividadId" value="@act.ActividadId" />
-                            <button class="btn btn-warning w-100">
-                                <i class="bi bi-pause-fill me-1"></i> Pausar
-                            </button>
-                        </form>
+                    @* ✅ BOTONES SOLO EN PERSONAL *@
+                    @if (!Model.EsGlobal)
+                    {
+                        <div class="d-flex flex-lg-column gap-2">
+                            <form asp-controller="Actividad" asp-action="Pausar" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="actividadId" value="@act.ActividadId" />
+                                <button class="btn btn-warning w-100">
+                                    <i class="bi bi-pause-fill me-1"></i> Pausar
+                                </button>
+                            </form>
 
-                        <button type="button"
-                                class="btn btn-outline-light border-opacity-25 tt-icon-btn"
-                                title="Archivar"
-                                aria-label="Archivar"
-                                data-archivar-btn="true"
-                                data-actividad-id="@act.ActividadId"
-                                data-actividad-titulo="@act.Titulo">
-                            <i class="bi bi-archive"></i>
-                        </button>
-                    </div>
+                            <button type="button"
+                                    class="btn btn-outline-light border-opacity-25 tt-icon-btn"
+                                    title="Archivar"
+                                    aria-label="Archivar"
+                                    data-archivar-btn="true"
+                                    data-actividad-id="@act.ActividadId"
+                                    data-actividad-titulo="@act.Titulo">
+                                <i class="bi bi-archive"></i>
+                            </button>
+                        </div>
+                    }
                 </div>
             </div>
         }
     }
-
 
     <!-- GRID DE ACTIVIDADES -->
     @if (Model.Actividades.Any())
@@ -137,18 +153,13 @@
                                         @(act.Estado == EstadoActividadVM.SinIniciar ? "Sin iniciar" : "Pausada")
                                     </span>
 
-                                    @if (User.IsInRole("Admin"))
+                                    @if (!string.IsNullOrWhiteSpace(act.UsuarioNombre))
                                     {
-                                        @if (!string.IsNullOrWhiteSpace(act.UsuarioNombre))
-                                        {
-                                            <span class="tt-badge">
-                                                <i class="bi bi-person me-1"></i>@act.UsuarioNombre
-                                            </span>
-                                        }
+                                        <span class="tt-badge">
+                                            <i class="bi bi-person me-1"></i>@act.UsuarioNombre
+                                        </span>
                                     }
-
                                 </div>
-
 
                                 <h5 class="mb-1">@act.Titulo</h5>
                                 <div class="tt-text-2">@act.Descripcion</div>
@@ -173,28 +184,7 @@
 
                         <div class="d-flex justify-content-end gap-2 flex-wrap align-items-center">
 
-
-                            @if (act.Estado == EstadoActividadVM.SinIniciar)
-                            {
-                                <form asp-controller="Actividad" asp-action="Iniciar" method="post" class="m-0">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="actividadId" value="@act.ActividadId" />
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="bi bi-play-fill me-1"></i> Iniciar
-                                    </button>
-                                </form>
-                            }
-                            else
-                            {
-                                <form asp-controller="Actividad" asp-action="Reanudar" method="post" class="m-0">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="actividadId" value="@act.ActividadId" />
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="bi bi-play-fill me-1"></i> Reanudar
-                                    </button>
-                                </form>
-                            }
-                            <!-- Ver notas (AJAX modal) -->
+                            @* ✅ Ver notas SIEMPRE (auditoría) *@
                             <button type="button"
                                     class="btn btn-soft tt-icon-btn"
                                     title="Ver notas"
@@ -204,20 +194,44 @@
                                 <i class="bi bi-journal-text"></i>
                             </button>
 
+                            @* ✅ Botones de operar SOLO en personal *@
+                            @if (!Model.EsGlobal)
+                            {
+                                if (act.Estado == EstadoActividadVM.SinIniciar)
+                                {
+                                    <form asp-controller="Actividad" asp-action="Iniciar" method="post" class="m-0">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="actividadId" value="@act.ActividadId" />
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="bi bi-play-fill me-1"></i> Iniciar
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form asp-controller="Actividad" asp-action="Reanudar" method="post" class="m-0">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="actividadId" value="@act.ActividadId" />
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-play-fill me-1"></i> Reanudar
+                                        </button>
+                                    </form>
+                                }
 
-                            <form asp-controller="Actividad" asp-action="Archivar" method="post" class="m-0">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="actividadId" value="@act.ActividadId" />
-                                <button type="button"
-                                        class="btn btn-outline-light border-opacity-25 tt-icon-btn"
-                                        title="Archivar"
-                                        aria-label="Archivar"
-                                        data-archivar-btn="true"
-                                        data-actividad-id="@act.ActividadId"
-                                        data-actividad-titulo="@act.Titulo">
-                                    <i class="bi bi-archive"></i>
-                                </button>
-                            </form>
+                                <form asp-controller="Actividad" asp-action="Archivar" method="post" class="m-0">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="actividadId" value="@act.ActividadId" />
+                                    <button type="button"
+                                            class="btn btn-outline-light border-opacity-25 tt-icon-btn"
+                                            title="Archivar"
+                                            aria-label="Archivar"
+                                            data-archivar-btn="true"
+                                            data-actividad-id="@act.ActividadId"
+                                            data-actividad-titulo="@act.Titulo">
+                                        <i class="bi bi-archive"></i>
+                                    </button>
+                                </form>
+                            }
                         </div>
 
                     </div>
@@ -230,75 +244,82 @@
         <div class="tt-card p-5 text-center">
             <h5>No hay actividades</h5>
             <div class="tt-text-2 mb-3">Creá una para comenzar.</div>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaActividad">
-                <i class="bi bi-plus-lg me-1"></i> Nueva actividad
-            </button>
+
+            @if (!Model.EsGlobal)
+            {
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaActividad">
+                    <i class="bi bi-plus-lg me-1"></i> Nueva actividad
+                </button>
+            }
         </div>
     }
 </div>
 
-<!-- MODAL NUEVA ACTIVIDAD -->
-<div class="modal fade" id="modalNuevaActividad" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content text-white">
-            <div class="modal-header">
-                <h5 class="modal-title">Nueva actividad</h5>
-                <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
+@* ✅ SOLO EN PERSONAL: MODAL NUEVA ACTIVIDAD *@
+@if (!Model.EsGlobal)
+{
+    <div class="modal fade" id="modalNuevaActividad" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content text-white">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nueva actividad</h5>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
 
-            <form asp-controller="Actividad" asp-action="Create" method="post">
-                @Html.AntiForgeryToken()
+                <form asp-controller="Actividad" asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
 
-                <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="form-label">Tipo</label>
-                            <select class="form-select" name="tipoActividadId" required>
-                                @foreach (var t in Model.TiposActividad)
-                                {
-                                    <option value="@t.Value">@t.Text</option>
-                                }
-                            </select>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Tipo</label>
+                                <select class="form-select" name="tipoActividadId" required>
+                                    @foreach (var t in Model.TiposActividad)
+                                    {
+                                        <option value="@t.Value">@t.Text</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Código</label>
+                                <input class="form-control" name="codigo" />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Fecha</label>
+                                <input class="form-control" disabled value="@DateTime.Now.ToString("dd/MM/yyyy")" />
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Título</label>
+                                <input class="form-control" name="titulo" required />
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Descripción</label>
+                                <input class="form-control" name="descripcion" />
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Notas</label>
+                                <textarea class="form-control" name="notas"></textarea>
+                            </div>
                         </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Código</label>
-                            <input class="form-control" name="codigo" />
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Fecha</label>
-                            <input class="form-control" readonly value="@DateTime.Now.ToString("dd/MM/yyyy")" />
-                        </div>
-
-                        <div class="col-12">
-                            <label class="form-label">Título</label>
-                            <input class="form-control" name="titulo" required />
-                        </div>
-
-                        <div class="col-12">
-                            <label class="form-label">Descripción</label>
-                            <input class="form-control" name="descripcion" />
-                        </div>
-@* 
-                        <div class="col-12">
-                            <label class="form-label">Notas</label>
-                            <textarea class="form-control" name="notas"></textarea>
-                        </div> *@
                     </div>
-                </div>
 
-                <div class="modal-footer">
-                    <button class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-primary">Crear</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-primary">Crear</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+}
 
-<!-- MODAL PAUSA + NOTA -->
-@if (Model.PausaTiempoId != null)
+@* ✅ SOLO EN PERSONAL: MODAL PAUSA + NOTA *@
+@if (!Model.EsGlobal && Model.PausaTiempoId != null)
 {
     <div class="modal fade show" style="display:block; background:rgba(0,0,0,.6)">
         <div class="modal-dialog modal-dialog-centered">
@@ -344,7 +365,6 @@
             </div>
         </div>
         <div id="tt-modal-host"></div>
-
     </div>
 }
 
@@ -352,7 +372,6 @@
 <div id="tt-modal-host"></div>
 
 <!--MODAL ARCHIVAR ACTRIVIDAD-->
-
 <form id="ttArchivarForm" asp-controller="Actividad" asp-action="Archivar" method="post" class="d-none">
     @Html.AntiForgeryToken()
     <input type="hidden" name="actividadId" id="ttArchivarActividadId" />
@@ -402,7 +421,6 @@
             const timerEls = document.querySelectorAll("[data-tt-tiempo-actual]");
             if (!timerEls.length) return;
 
-            // Cache de starts válidos
             const timers = [];
             timerEls.forEach(el => {
                 const startIso = el.dataset.start;
@@ -429,7 +447,6 @@
         })();
 
         (function () {
-            // Archive confirmation handler (robust)
             try {
                 const modalEl = document.getElementById("ttConfirmArchivarModal");
                 const form = document.getElementById("ttArchivarForm");
@@ -437,33 +454,26 @@
                 const tituloEl = document.getElementById("ttArchivarTitulo");
                 const confirmBtn = document.getElementById("ttArchivarConfirmBtn");
 
-                if (!modalEl) { console.warn('ttConfirmArchivarModal no encontrado'); return; }
-                if (!form) { console.warn('ttArchivarForm no encontrado'); }
-                if (!inputId) { console.warn('ttArchivarActividadId no encontrado'); }
-                if (!confirmBtn) { console.warn('ttArchivarConfirmBtn no encontrado'); }
+                if (!modalEl) return;
 
-                // ensure bootstrap modal API is available when needed
                 function showModal() {
-                    if (!window.bootstrap || !bootstrap.Modal) {
-                        console.error('Bootstrap Modal API no disponible');
-                        return;
-                    }
+                    if (!window.bootstrap || !bootstrap.Modal) return;
                     const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
                     modal.show();
                 }
 
-                // delegation: listen for clicks on any element with data-archivar-btn attribute
                 document.addEventListener('click', (e) => {
                     const btn = e.target.closest('[data-archivar-btn]');
                     if (!btn) return;
 
+                    // ✅ En global no deberían existir botones, pero por las dudas:
+                    @* si querés harden: si Model.EsGlobal, salir *@
                     const actividadId = btn.getAttribute('data-actividad-id');
                     const titulo = btn.getAttribute('data-actividad-titulo') || '';
 
                     if (inputId) inputId.value = actividadId || '';
                     if (tituloEl) tituloEl.textContent = titulo ? `“${titulo}”` : '';
 
-                    console.log('Abrir modal archivar para actividad', actividadId);
                     showModal();
                 });
 
@@ -481,10 +491,7 @@
             console.log("NotasModal JS cargado");
 
             const host = document.getElementById("tt-modal-host");
-            if (!host) {
-                console.warn("Falta #tt-modal-host");
-                return;
-            }
+            if (!host) return;
 
             const notasUrlBase = '@Url.Action("NotasModal", "Actividad")';
             const notaUpsertUrl = '@Url.Action("NotaUpsert", "Actividad")';
@@ -497,19 +504,16 @@
 
             async function openNotasModal(actividadId) {
                 const url = `${notasUrlBase}?actividadId=${encodeURIComponent(actividadId)}`;
-                console.log("GET notas:", url);
 
                 let res;
                 try {
                     res = await fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } });
                 } catch (e) {
-                    console.error("Fetch error", e);
                     alert("No se pudo conectar para cargar las notas.");
                     return;
                 }
 
                 if (!res.ok) {
-                    console.error("HTTP", res.status);
                     alert(`No se pudieron cargar las notas (HTTP ${res.status}).`);
                     return;
                 }
@@ -519,13 +523,11 @@
 
                 const modalEl = document.getElementById("ttNotasModal");
                 if (!modalEl) {
-                    console.error("No vino #ttNotasModal en el HTML");
                     alert("No se pudo abrir el modal de notas.");
                     return;
                 }
 
                 if (!window.bootstrap?.Modal) {
-                    console.error("bootstrap.Modal no existe");
                     alert("Bootstrap JS no está cargado (Modal).");
                     return;
                 }
@@ -543,7 +545,6 @@
             function bindNotasModal(modalEl) {
                 const token = getToken(modalEl);
 
-                // confirm inline UI
                 const confirmWrap = modalEl.querySelector("[data-confirm-inline]");
                 const confirmOk = modalEl.querySelector("[data-confirm-ok]");
                 const confirmCancel = modalEl.querySelector("[data-confirm-cancel]");
@@ -553,18 +554,15 @@
                 let pendingHideItem = null;
 
                 function showConfirm() {
-                    if (!confirmWrap) return;
-                    confirmWrap.classList.remove("d-none");
+                    confirmWrap?.classList.remove("d-none");
                 }
 
                 function hideConfirm() {
-                    if (!confirmWrap) return;
-                    confirmWrap.classList.add("d-none");
+                    confirmWrap?.classList.add("d-none");
                     pendingHideTiempoId = null;
                     pendingHideItem = null;
                 }
 
-                // CLICK TEXTO → EDITAR
                 modalEl.addEventListener("click", (e) => {
                     const textEl = e.target.closest("[data-nota-text]");
                     if (!textEl) return;
@@ -577,7 +575,6 @@
                     editor.classList.remove("d-none");
                 });
 
-                // CANCELAR EDICIÓN
                 modalEl.addEventListener("click", (e) => {
                     const btn = e.target.closest("[data-nota-cancelar]");
                     if (!btn) return;
@@ -591,7 +588,6 @@
                     textEl.classList.remove("d-none");
                 });
 
-                // GUARDAR (UPSERT)
                 modalEl.addEventListener("click", async (e) => {
                     const btn = e.target.closest("[data-nota-guardar]");
                     if (!btn) return;
@@ -626,10 +622,9 @@
                             : "— (sin nota) —";
                         textEl.classList.remove("d-none");
                     }
-                    if (editor) editor.classList.add("d-none");
+                    editor?.classList.add("d-none");
                 });
 
-                // CLICK OCULTAR → mostrar confirm inline (sin modal)
                 modalEl.addEventListener("click", (e) => {
                     const btn = e.target.closest("[data-nota-hide]");
                     if (!btn) return;
@@ -644,11 +639,9 @@
                     if (confirmText) {
                         confirmText.innerHTML = '¿Ocultar esta sesión del listado de notas?<br/><span class="opacity-75">No afecta el tiempo acumulado.</span>';
                     }
-
                     showConfirm();
                 });
 
-                // CONFIRM OK
                 confirmOk?.addEventListener("click", async () => {
                     if (!pendingHideTiempoId || !pendingHideItem) return;
 
@@ -670,10 +663,7 @@
                     hideConfirm();
                 });
 
-                // CONFIRM CANCEL
-                confirmCancel?.addEventListener("click", () => {
-                    hideConfirm();
-                });
+                confirmCancel?.addEventListener("click", () => hideConfirm());
             }
 
             document.addEventListener("click", (e) => {
@@ -685,8 +675,6 @@
 
                 openNotasModal(actividadId);
             });
-
-            console.log("NotasModal handler OK");
         })();
     </script>
 }

@@ -5,15 +5,17 @@ namespace TimeTracker_Entevisual.Models.ViewModels
 {
     public class UsuarioCreateVM
     {
-        [Required]
+        [Required(ErrorMessage = "El nombre es obligatorio.")]
         public string Nombre { get; set; } = "";
 
-        [Required]
+        [Required(ErrorMessage = "El apellido es obligatorio.")]
         public string Apellido { get; set; } = "";
 
-        [Required, EmailAddress]
+        [Required(ErrorMessage = "El email es obligatorio.")]
+        [EmailAddress(ErrorMessage = "Ingrese un email válido.")]
         public string Email { get; set; } = "";
-        [Required]
+
+        [Required(ErrorMessage = "El rol es obligatorio.")]
         public string Rol { get; set; } = "Usuario";
 
         public List<SelectListItem> RolesDisponibles { get; set; } = new();

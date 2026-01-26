@@ -1,4 +1,7 @@
-﻿namespace TimeTracker_Entevisual.Helpers
+﻿using TimeTracker_Entevisual.Models;
+using TimeTracker_Entevisual.Models.ViewModels;
+
+namespace TimeTracker_Entevisual.Helpers
 {
     public static class TimeFormatHelper
     {
@@ -11,5 +14,9 @@
 
             return $"{totalHoras:00}:{ts.Minutes:00}:{ts.Seconds:00}";
         }
+
+        
     }
+
 }
+

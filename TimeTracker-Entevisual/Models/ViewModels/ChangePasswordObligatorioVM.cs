@@ -4,13 +4,17 @@ namespace TimeTracker_Entevisual.Models.ViewModels
 {
     public class ChangePasswordObligatorioVM
     {
-        [Required, DataType(DataType.Password)]
+        [Required(ErrorMessage = "La contraseña actual es obligatoria.")]
+        [DataType(DataType.Password)]
         public string PasswordActual { get; set; } = "";
 
-        [Required, DataType(DataType.Password)]
+        [Required(ErrorMessage = "La nueva contraseña es obligatoria.")]
+        [DataType(DataType.Password)]
         public string NuevaPassword { get; set; } = "";
 
-        [Required, DataType(DataType.Password), Compare(nameof(NuevaPassword))]
+        [Required(ErrorMessage = "Debe confirmar la nueva contraseña.")]
+        [DataType(DataType.Password)]
+        [Compare(nameof(NuevaPassword), ErrorMessage = "La confirmación no coincide con la nueva contraseña.")]
         public string ConfirmarNuevaPassword { get; set; } = "";
     }
 }

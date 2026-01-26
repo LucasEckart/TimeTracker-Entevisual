@@ -1,4 +1,6 @@
-﻿namespace TimeTracker_Entevisual.Models.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TimeTracker_Entevisual.Models.ViewModels
 {
     public class ActividadCardVM
     {
@@ -8,6 +10,7 @@
         public string TipoActividad { get; set; } = "";
         public string? Codigo { get; set; }
 
+        [Required(ErrorMessage = "El título es obligatorio.")]
         public string Titulo { get; set; } = "";
         public string? Descripcion { get; set; }
 

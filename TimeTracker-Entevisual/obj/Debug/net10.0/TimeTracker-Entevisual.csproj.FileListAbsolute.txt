@@ -224,7 +224,6 @@ C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entev
 C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entevisual\obj\Debug\net10.0\ref\TimeTracker-Entevisual.dll
 C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entevisual\bin\Debug\net10.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entevisual\bin\Debug\net10.0\Microsoft.AspNetCore.Identity.UI.dll
-C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entevisual\bin\Debug\net10.0\Microsoft.Extensions.FileProviders.Embedded.dll
 C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entevisual\obj\Debug\net10.0\TimeTracker-Entevisual.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entevisual\obj\Debug\net10.0\compressed\ofa40bqe71-{0}-b9sayid5wm-b9sayid5wm.gz
 C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entevisual\obj\Debug\net10.0\compressed\j9swiz3yzq-{0}-90yqlj465b-90yqlj465b.gz
@@ -402,5 +401,5 @@ C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entev
 C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entevisual\bin\Debug\net10.0\tr\Microsoft.CodeAnalysis.Scripting.resources.dll
 C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entevisual\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.Scripting.resources.dll
 C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entevisual\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Scripting.resources.dll
-C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entevisual\obj\Debug\net10.0\compressed\dihls1fqxc-{0}-s42elba11m-s42elba11m.gz
+C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entevisual\obj\Debug\net10.0\compressed\dihls1fqxc-{0}-1wbnjeipp4-1wbnjeipp4.gz
 C:\Users\USER\OneDrive\Documentos\lucas\TimeTracker-Entevisual\TimeTracker-Entevisual\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

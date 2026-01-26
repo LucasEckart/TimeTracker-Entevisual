@@ -21,6 +21,8 @@ namespace TimeTracker_Entevisual.Models.ViewModels
         public int TotalActividades => Actividades.Count + (EnEjecucion is null ? 0 : 1);
 
         public FiltrosActividadesVM Filtros { get; set; } = new();
+        public bool EsGlobal { get; set; }
+
 
 
     }

@@ -3,24 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|c:\\users\\user\\onedrive\\documentos\\lucas\\timetracker-entevisual\\timetracker-entevisual\\controllers\\archivocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|solutionrelative:timetracker-entevisual\\controllers\\archivocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|c:\\users\\user\\onedrive\\documentos\\lucas\\timetracker-entevisual\\timetracker-entevisual\\models\\viewmodels\\changepasswordobligatoriovm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|solutionrelative:timetracker-entevisual\\models\\viewmodels\\changepasswordobligatoriovm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|c:\\users\\user\\onedrive\\documentos\\lucas\\timetracker-entevisual\\timetracker-entevisual\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|solutionrelative:timetracker-entevisual\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|c:\\users\\user\\onedrive\\documentos\\lucas\\timetracker-entevisual\\timetracker-entevisual\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|solutionrelative:timetracker-entevisual\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|c:\\users\\user\\onedrive\\documentos\\lucas\\timetracker-entevisual\\timetracker-entevisual\\views\\archivo\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|solutionrelative:timetracker-entevisual\\views\\archivo\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|c:\\users\\user\\onedrive\\documentos\\lucas\\timetracker-entevisual\\timetracker-entevisual\\models\\viewmodels\\actividadcardvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|solutionrelative:timetracker-entevisual\\models\\viewmodels\\actividadcardvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|c:\\users\\user\\onedrive\\documentos\\lucas\\timetracker-entevisual\\timetracker-entevisual\\views\\users\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|solutionrelative:timetracker-entevisual\\views\\users\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|c:\\users\\user\\onedrive\\documentos\\lucas\\timetracker-entevisual\\timetracker-entevisual\\views\\shared\\_filtrosactividades.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|solutionrelative:timetracker-entevisual\\views\\shared\\_filtrosactividades.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|c:\\users\\user\\onedrive\\documentos\\lucas\\timetracker-entevisual\\timetracker-entevisual\\models\\tipoactividad.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C149044-4682-A536-DB9C-C1BD99BF1182}|TimeTracker-Entevisual\\TimeTracker-Entevisual.csproj|solutionrelative:timetracker-entevisual\\models\\tipoactividad.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,19 +26,32 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ArchivoController.cs",
-              "DocumentMoniker": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Controllers\\ArchivoController.cs",
-              "RelativeDocumentMoniker": "TimeTracker-Entevisual\\Controllers\\ArchivoController.cs",
-              "ToolTip": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Controllers\\ArchivoController.cs",
-              "RelativeToolTip": "TimeTracker-Entevisual\\Controllers\\ArchivoController.cs",
-              "ViewState": "AgIAAEcAAAAAAAAAAAAcwHcAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "TimeTracker-Entevisual\\Controllers\\AccountController.cs",
+              "ToolTip": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "TimeTracker-Entevisual\\Controllers\\AccountController.cs",
+              "ViewState": "AgIAAEYAAAAAAAAAAIA6wGAAAABDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-25T02:10:15.476Z",
+              "WhenOpened": "2026-01-26T03:35:16.695Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ChangePasswordObligatorioVM.cs",
+              "DocumentMoniker": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Models\\ViewModels\\ChangePasswordObligatorioVM.cs",
+              "RelativeDocumentMoniker": "TimeTracker-Entevisual\\Models\\ViewModels\\ChangePasswordObligatorioVM.cs",
+              "ToolTip": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Models\\ViewModels\\ChangePasswordObligatorioVM.cs",
+              "RelativeToolTip": "TimeTracker-Entevisual\\Models\\ViewModels\\ChangePasswordObligatorioVM.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-26T03:34:42.13Z",
               "EditorCaption": ""
             },
             {
@@ -52,53 +61,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Views\\Archivo\\Index.cshtml",
-              "RelativeDocumentMoniker": "TimeTracker-Entevisual\\Views\\Archivo\\Index.cshtml",
-              "ToolTip": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Views\\Archivo\\Index.cshtml",
-              "RelativeToolTip": "TimeTracker-Entevisual\\Views\\Archivo\\Index.cshtml",
-              "ViewState": "AgIAAHsAAAAAAAAAAAAAACYAAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-25T01:57:07.616Z",
+              "Title": "ActividadCardVM.cs",
+              "DocumentMoniker": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Models\\ViewModels\\ActividadCardVM.cs",
+              "RelativeDocumentMoniker": "TimeTracker-Entevisual\\Models\\ViewModels\\ActividadCardVM.cs",
+              "ToolTip": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Models\\ViewModels\\ActividadCardVM.cs",
+              "RelativeToolTip": "TimeTracker-Entevisual\\Models\\ViewModels\\ActividadCardVM.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-26T03:16:56.912Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Views\\Users\\Index.cshtml",
-              "RelativeDocumentMoniker": "TimeTracker-Entevisual\\Views\\Users\\Index.cshtml",
-              "ToolTip": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Views\\Users\\Index.cshtml",
-              "RelativeToolTip": "TimeTracker-Entevisual\\Views\\Users\\Index.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAF4AAABHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-25T01:43:41.852Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "_FiltrosActividades.cshtml",
-              "DocumentMoniker": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Views\\Shared\\_FiltrosActividades.cshtml",
-              "RelativeDocumentMoniker": "TimeTracker-Entevisual\\Views\\Shared\\_FiltrosActividades.cshtml",
-              "ToolTip": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Views\\Shared\\_FiltrosActividades.cshtml",
-              "RelativeToolTip": "TimeTracker-Entevisual\\Views\\Shared\\_FiltrosActividades.cshtml",
-              "ViewState": "AgIAABAAAAAAAAAAAAAYwC4AAAAUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-25T01:27:51.151Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "HomeController.cs",
-              "DocumentMoniker": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Controllers\\HomeController.cs",
-              "RelativeDocumentMoniker": "TimeTracker-Entevisual\\Controllers\\HomeController.cs",
-              "ToolTip": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Controllers\\HomeController.cs",
-              "RelativeToolTip": "TimeTracker-Entevisual\\Controllers\\HomeController.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAAKUAAAAJAAAAAAAAAA==",
+              "Title": "TipoActividad.cs",
+              "DocumentMoniker": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Models\\TipoActividad.cs",
+              "RelativeDocumentMoniker": "TimeTracker-Entevisual\\Models\\TipoActividad.cs",
+              "ToolTip": "C:\\Users\\USER\\OneDrive\\Documentos\\lucas\\TimeTracker-Entevisual\\TimeTracker-Entevisual\\Models\\TipoActividad.cs",
+              "RelativeToolTip": "TimeTracker-Entevisual\\Models\\TipoActividad.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-25T01:27:06.937Z",
+              "WhenOpened": "2026-01-26T03:16:29.147Z",
               "EditorCaption": ""
             }
           ]
